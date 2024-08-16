@@ -1,0 +1,11 @@
+name: helloGZSZ
+version: '1.0-SNAPSHOT'
+main: org.hellogzsz.hellogzsz.HelloGZSZ
+api-version: '1.20'
+commands:
+  gzsz:
+    description: 这是gzsz命令的描述。
+    usage: /<command>
+    aliases: []  # 如果需要别名，可以在这里列出
+    permission: hellogzsz.gzsz  # 使用此命令所需的权限
+    permission-message: 你没有权限执行这个命令！
