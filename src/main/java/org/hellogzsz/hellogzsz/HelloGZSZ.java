@@ -2,6 +2,7 @@ package org.hellogzsz.hellogzsz;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -9,12 +10,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.StringUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
-public final class HelloGZSZ extends JavaPlugin implements Listener {
+public final class HelloGZSZ extends JavaPlugin implements Listener, TabCompleter {
 
     // 插件配置文件
     private FileConfiguration config;
@@ -70,8 +75,10 @@ public final class HelloGZSZ extends JavaPlugin implements Listener {
                 sendMessage(sender, "欢迎使用 /gzsz 命令！请输入子命令来获取帮助或执行操作。");
             } else if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
                 // 处理 /gzsz help 命令
-                sendMessage(sender, "-------------------------");
+                sendMessage(sender, "-----Hello-GZSZ-帮助------");
                 sendMessage(sender, "/gzsz reload - 重新加载插件配置文件。");
+                sendMessage(sender, "/gzsz info   - 查看插件信息。");
+                sendMessage(sender, "/gzsz help   - 打开HelloGZSZ插件帮助文件。");
                 // 如果有更多子命令，可以在这里继续添加
                 sendMessage(sender, "-------------------------");
             } else if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
@@ -79,6 +86,13 @@ public final class HelloGZSZ extends JavaPlugin implements Listener {
                 config = YamlConfiguration.loadConfiguration(configFile);
                 getLogger().info(PLUGIN_PREFIX + "配置文件已重新加载。");
                 sendMessage(sender, "配置文件已重新加载！");
+                return true;
+            }else if (args.length >= 1 && args[0].equalsIgnoreCase("info")) {
+                // 插件信息
+                sendMessage(sender, "-----Hello-GZSZ-信息------");
+                sendMessage(sender, "此插件由魔大可编写，用于赣州师专周边服务器");
+                sendMessage(sender, "适用服务端 paper/spigot 1.20.1 ");
+                sendMessage(sender, "-------------------------");
                 return true;
             } else {
                 // 如果输入了未知的子命令
@@ -89,7 +103,20 @@ public final class HelloGZSZ extends JavaPlugin implements Listener {
         return false; // 如果不是/gzsz命令，返回false让其他命令有机会被处理
     }
 
-
+    // Tab补全功能
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (command.getName().equalsIgnoreCase("gzsz")) {
+            List<String> options = new ArrayList<>();
+            if (args.length == 1) {
+                options.add("help");
+                options.add("reload");
+                options.add("info");
+                return StringUtil.copyPartialMatches(args[0], options, new ArrayList<>());
+            }
+        }
+        return Collections.emptyList();
+    }
 
     @Override
     public void onDisable() {
