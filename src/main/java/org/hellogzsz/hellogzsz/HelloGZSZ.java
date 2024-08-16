@@ -71,34 +71,45 @@ public final class HelloGZSZ extends JavaPlugin implements Listener, TabComplete
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("gzsz")) {
             if (args.length == 0) {
-                // 如果没有提供子命令，可以显示默认消息或帮助信息
+                // 如果没有提供子命令，显示默认消息或帮助信息
                 sendMessage(sender, "欢迎使用 /gzsz 命令！请输入子命令来获取帮助或执行操作。");
-            } else if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
-                // 处理 /gzsz help 命令
-                sendMessage(sender, "-----Hello-GZSZ-帮助------");
-                sendMessage(sender, "/gzsz reload - 重新加载插件配置文件。");
-                sendMessage(sender, "/gzsz info   - 查看插件信息。");
-                sendMessage(sender, "/gzsz help   - 打开HelloGZSZ插件帮助文件。");
-                // 如果有更多子命令，可以在这里继续添加
-                sendMessage(sender, "-------------------------");
-            } else if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
-                // 重新加载配置文件
-                config = YamlConfiguration.loadConfiguration(configFile);
-                getLogger().info(PLUGIN_PREFIX + "配置文件已重新加载。");
-                sendMessage(sender, "配置文件已重新加载！");
-                return true;
-            }else if (args.length >= 1 && args[0].equalsIgnoreCase("info")) {
-                // 插件信息
-                sendMessage(sender, "-----Hello-GZSZ-信息------");
-                sendMessage(sender, "此插件由魔大可编写，用于赣州师专周边服务器");
-                sendMessage(sender, "适用服务端 paper/spigot 1.20.1 ");
-                sendMessage(sender, "-------------------------");
-                return true;
-            } else {
-                // 如果输入了未知的子命令
-                sendMessage(sender, "未知的 /gzsz 子命令: " + args[0]);
+                return true; // 表明命令已处理
             }
-            return true; // 表示命令已被处理
+
+            String subCommand = args[0].toLowerCase(); // 将子命令转换为小写以统一处理
+
+            switch (subCommand) {
+                case "help":
+                    // 处理 /gzsz help 命令
+                    sendMessage(sender, "-----Hello-GZSZ-帮助------");
+                    sendMessage(sender, "/gzsz reload - 重新加载插件配置文件。");
+                    sendMessage(sender, "/gzsz info   - 查看插件信息。");
+                    sendMessage(sender, "/gzsz help   - 打开HelloGZSZ插件帮助文件。");
+                    // 如果有更多子命令，可以在这里继续添加
+                    sendMessage(sender, "-------------------------");
+                    return true; // 表明命令已处理
+
+                case "reload":
+                    // 重新加载配置文件
+                    config = YamlConfiguration.loadConfiguration(configFile);
+                    getLogger().info(PLUGIN_PREFIX + "配置文件已重新加载。");
+                    sendMessage(sender, "配置文件已重新加载！");
+                    return true; // 表明命令已处理
+
+                case "info":
+                    // 插件信息
+                    sendMessage(sender, "-----Hello-GZSZ-信息------");
+                    sendMessage(sender, "此插件由魔大可编写，用于赣州师专周边服务器");
+                    sendMessage(sender, "适用服务端 paper/spigot 1.20.1 ");
+                    sendMessage(sender, "-------------------------");
+                    return true; // 表明命令已处理
+
+                default:
+                    // 如果输入了未知的子命令
+                    sendMessage(sender, "未知的 /gzsz 子命令: " + args[0]);
+                    return true; // 表明命令已处理，尽管是未知命令
+
+            }
         }
         return false; // 如果不是/gzsz命令，返回false让其他命令有机会被处理
     }
@@ -109,6 +120,7 @@ public final class HelloGZSZ extends JavaPlugin implements Listener, TabComplete
         if (command.getName().equalsIgnoreCase("gzsz")) {
             List<String> options = new ArrayList<>();
             if (args.length == 1) {
+                // 为第一个参数提供补全选项
                 options.add("help");
                 options.add("reload");
                 options.add("info");
